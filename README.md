@@ -1,9 +1,9 @@
 # Console Json Exporter for OpenTelemetry .NET
 
-[![NuGet](https://img.shields.io/nuget/v/JeremyMorren.OpenTelemetry.Exporter.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Json.Console)
-[![NuGet](https://img.shields.io/nuget/dt/JeremyMorren.OpenTelemetry.Exporter.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Json.Console)
+[![NuGet](https://img.shields.io/nuget/v/JeremyMorren.OpenTelemetry.Exporter.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Console.Json)
+[![NuGet](https://img.shields.io/nuget/dt/JeremyMorren.OpenTelemetry.Exporter.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Console.Json)
 
-The json console exporter prints data to the Console/Debug output in JSON format. Currently, metrics and activities (traces) are supported.
+The json console exporter prints data to the Console/Debug output in JSON format.
 
 All data is printed in JSON format with `OpenTelemetry` prefix e.g. `OpenTelemetry {"activity": ...}`.
 
@@ -69,6 +69,28 @@ the [OpenTelemetry specification](https://github.com/open-telemetry/opentelemetr
 | `OTEL_METRIC_EXPORT_INTERVAL` | `ExportIntervalMilliseconds`                    |
 | `OTEL_METRIC_EXPORT_TIMEOUT`  | `ExportTimeoutMilliseconds`                     |
 
-## References
 
-* [OpenTelemetry Project](https://opentelemetry.io/)
+## Serilog
+
+[![NuGet](https://img.shields.io/nuget/v/JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json)
+[![NuGet](https://img.shields.io/nuget/dt/JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json)
+
+A separate package is available to use with serilog.
+
+```shell
+dotnet add package JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json
+```
+
+```csharp
+using Serilog.Sinks.OpenTelemetry.Console.Json;
+
+var logConf = new LoggerConfiguration()
+    // Configure other sinks, enrichers, etc.
+    // e.g. .WriteTo.Console()
+    .Enrich.FromLogContext();
+
+if (Debugger.IsAttached)
+    logConf.WriteTo.OpenTelemetryConsoleJson(ConsoleExporterOutputTargets.Debug);
+
+Log.Logger = logConf.CreateLogger();
+```

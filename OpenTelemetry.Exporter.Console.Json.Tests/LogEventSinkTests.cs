@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Diagnostics;
+using FluentAssertions;
 using Serilog;
 using Serilog.Context;
-
 namespace OpenTelemetry.Exporter.Console.Json.Tests;
 
 public class LogEventSinkTests

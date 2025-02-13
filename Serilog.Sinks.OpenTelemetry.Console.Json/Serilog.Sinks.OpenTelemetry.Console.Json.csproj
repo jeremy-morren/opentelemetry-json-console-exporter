@@ -7,7 +7,7 @@
 
         <Description>Console/Debug exporter (JSON) for OpenTelemetry .NET for debugging</Description>
         <PackageTags>opentelemetry;console;distributed-tracing;json;opentelemetry-console;debug;serilog</PackageTags>
-        <PackageId>JeremyMorren.Sinks.OpenTelemetry.Console.Json</PackageId>
+        <PackageId>JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
