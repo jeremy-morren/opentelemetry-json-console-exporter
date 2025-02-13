@@ -1,0 +1,48 @@
+﻿<Project>
+    <!-- Add git source control information to the build -->
+    <Target Name="GetGitSourceControlInformation" BeforeTargets="InitializeSourceControlInformation;BeforeBuild">
+
+        <!-- Get the short git commit id (12 characters) -->
+        <!-- The SourceRevisionId property will be added to assembly version information by dotnet SDK -->
+        <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; describe --long --always --exclude=* --abbrev=12"
+              ConsoleToMsBuild="True"
+              IgnoreExitCode="false"
+              EchoOff="true"
+              LogStandardErrorAsError="true"
+              StandardOutputImportance="low" >
+            <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput"/>
+        </Exec>
+
+
+        <!-- Get the full git commit id (40 characters) -->
+        <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; describe --long --always --exclude=* --abbrev=40"
+              ConsoleToMsBuild="True"
+              IgnoreExitCode="false"
+              EchoOff="true"
+              LogStandardErrorAsError="true"
+              StandardOutputImportance="low" >
+            <Output PropertyName="SourceRevisionIdFull" TaskParameter="ConsoleOutput"/>
+        </Exec>
+
+        <!-- Get the git origin URL -->
+        <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; remote get-url origin"
+              ConsoleToMsBuild="True"
+              IgnoreExitCode="false"
+              EchoOff="true"
+              LogStandardErrorAsError="true"
+              StandardOutputImportance="low" >
+            <Output PropertyName="_GitOriginUrl" TaskParameter="ConsoleOutput"/>
+        </Exec>
+
+        <PropertyGroup>
+            <!-- Add repository information to the build -->
+            <RepositoryType Condition="'$(RepositoryType)' == ''">git</RepositoryType>
+            <RepositoryCommit Condition="'$(RepositoryCommitId)' == ''">$(SourceRevisionIdFull)</RepositoryCommit>
+
+            <!-- Set repository and project URLs to the git repository URL if not already set -->
+            <RepositoryUrl Condition="'$(RepositoryUrl)' == ''">$(_GitOriginUrl)</RepositoryUrl>
+            <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">$(_GitOriginUrl)</PackageProjectUrl>
+
+        </PropertyGroup>
+    </Target>
+</Project>

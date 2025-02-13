@@ -9,6 +9,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{105FC936-1611-4205-ACCB-AA5B1C45CBBA}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.OpenTelemetry.Console.Json", "Serilog.Sinks.OpenTelemetry.Console.Json\Serilog.Sinks.OpenTelemetry.Console.Json.csproj", "{80F18C9D-8845-49A6-AFF6-52AAF551F6C9}"

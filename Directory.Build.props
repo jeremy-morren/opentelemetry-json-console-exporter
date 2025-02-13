@@ -2,12 +2,12 @@
     <PropertyGroup>
         <Authors>Jeremy Morren</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/jeremy-morren/opentelemetry-json-console-exporter</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/jeremy-morren/opentelemetry-json-console-exporter</RepositoryUrl>
 
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageOutputPath>$(MSBuildThisFileDirectory)Packages</PackageOutputPath>
 
+        <PackageTags>opentelemetry;console;distributed-tracing;json;opentelemetry-console;debug</PackageTags>
+        
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
