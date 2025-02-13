@@ -13,7 +13,6 @@
             <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput"/>
         </Exec>
 
-
         <!-- Get the full git commit id (40 characters) -->
         <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; describe --long --always --exclude=* --abbrev=40"
               ConsoleToMsBuild="True"
