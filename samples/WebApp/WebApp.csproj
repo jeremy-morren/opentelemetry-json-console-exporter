@@ -4,6 +4,9 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,10 +21,9 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.11.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="1.11.0-beta.1" />
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.11.0-beta.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 
         <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.1" />
-
-<!--        <PackageReference Include="Ozkanpakdil.OpenTelemetry.Exporter.Json.Console" Version="1.0.13" />-->
     </ItemGroup>
 
     <ItemGroup>
@@ -31,7 +33,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\opentelemetry-json-console-exporter\OpenTelmetry.Exporter.Console.Json\OpenTelemetry.Exporter.Console.Json.csproj" />
+      <ProjectReference Include="..\..\OpenTelemetry.Exporter.Console.Json\OpenTelemetry.Exporter.Console.Json.csproj" />
+      <ProjectReference Include="..\..\Serilog.Sinks.OpenTelemetry.Console.Json\Serilog.Sinks.OpenTelemetry.Console.Json.csproj" />
+<!--        <PackageReference Include="JeremyMorren.OpenTelemetry.Exporter.Console.Json" Version="1.9.0-rc2"/>-->
     </ItemGroup>
-
 </Project>

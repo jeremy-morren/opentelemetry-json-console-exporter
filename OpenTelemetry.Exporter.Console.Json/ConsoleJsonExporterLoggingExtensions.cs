@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Logs;
 
@@ -12,8 +11,6 @@ namespace OpenTelemetry.Exporter.Console.Json;
 /// <summary>
 /// Helper class to simplify registering of the Console JSON exporter.
 /// </summary>
-[RequiresDynamicCode(Constants.DynamicCodeMessage)]
-[RequiresUnreferencedCode(Constants.DynamicCodeMessage)]
 public static class ConsoleJsonExporterLoggingExtensions
 {
     /// <summary>

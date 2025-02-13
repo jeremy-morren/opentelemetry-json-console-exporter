@@ -1,27 +1,42 @@
+using System.Diagnostics;
 using Npgsql;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Exporter.Console.Json;
-using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Serilog;
+using Serilog.Sinks.OpenTelemetry.Console.Json;
 using WebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHostedService<TelemetryLoop>();
 
-const ConsoleExporterOutputTargets target = ConsoleExporterOutputTargets.Debug;
+if (Debugger.IsAttached)
+{
+    const ConsoleExporterOutputTargets target = ConsoleExporterOutputTargets.Debug;
 
-builder.Logging.ClearProviders()
-    .AddOpenTelemetry(b =>
+    // builder.Logging.ClearProviders()
+    //     .AddOpenTelemetry(b =>
+    //     {
+    //         b.IncludeScopes = true;
+    //         b.AddJsonConsoleExporter(o => o.Targets = target);
+    //     });
+
+    builder.Host.UseSerilog((context, services, logger) =>
     {
-        b.IncludeScopes = true;
-        b.AddJsonConsoleExporter(o => o.Targets = target);
+        logger.WriteTo.OpenTelemetryConsoleJson(target)
+            .ReadFrom.Configuration(context.Configuration)
+            .ReadFrom.Services(services)
+            .Enrich.FromLogContext();
     });
 
+    builder.Services.AddOpenTelemetry()
+        .WithTracing(b => b.AddJsonConsoleExporter(o => o.Targets = target))
+        .WithMetrics(b => b.AddJsonConsoleExporter(o => o.Targets = target));
+}
+
 builder.Services.AddOpenTelemetry()
-    .WithTracing(b => b.AddJsonConsoleExporter(o => o.Targets = target))
-    .WithMetrics(b => b.AddJsonConsoleExporter(o => o.Targets = target))
 
     .WithTracing(b => b
         .AddSource(TelemetryLoop.Source.Name)

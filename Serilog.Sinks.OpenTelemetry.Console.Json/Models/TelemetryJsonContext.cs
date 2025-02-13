@@ -1,12 +1,15 @@
 ﻿using System.Text.Json.Serialization;
+using OpenTelemetry.Exporter.Console.Json.Models;
 
-namespace OpenTelemetry.Exporter.Console.Json;
+namespace Serilog.Sinks.OpenTelemetry.Console.Json.Models;
 
 [JsonSourceGenerationOptions(
     WriteIndented = false,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     UseStringEnumConverter = true,
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals)]
+    NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
+    Converters = [typeof(ObjectJsonConverter)] )]
+
 [JsonSerializable(typeof(Telemetry))]
 internal partial class TelemetryJsonContext : JsonSerializerContext;

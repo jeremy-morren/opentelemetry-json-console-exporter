@@ -1,7 +1,7 @@
 # Console Json Exporter for OpenTelemetry .NET
 
-[![NuGet](https://img.shields.io/nuget/v/JeremyMorren.OpenTelemetry.Exporter.Json.Console.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Json.Console)
-[![NuGet](https://img.shields.io/nuget/dt/JeremyMorren.OpenTelemetry.Exporter.Json.Console.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Json.Console)
+[![NuGet](https://img.shields.io/nuget/v/JeremyMorren.OpenTelemetry.Exporter.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Json.Console)
+[![NuGet](https://img.shields.io/nuget/dt/JeremyMorren.OpenTelemetry.Exporter.Console.Json.svg)](https://www.nuget.org/packages/JeremyMorren.OpenTelemetry.Exporter.Json.Console)
 
 The json console exporter prints data to the Console/Debug output in JSON format. Currently, metrics and activities (traces) are supported.
 
@@ -16,7 +16,7 @@ Kudos to [Özkan Pakdil](https://github.com/ozkanpakdil/opentelemetry-json-conso
 ## Installation
 
 ```shell
-dotnet add package JeremyMorren.OpenTelemetry.Exporter.Json.Console
+dotnet add package JeremyMorren.OpenTelemetry.Exporter.Console.Json
 ```
 
 ## Configuration
@@ -24,6 +24,7 @@ dotnet add package JeremyMorren.OpenTelemetry.Exporter.Json.Console
 ```csharp
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using OpenTelemetry.Exporter.Console.Json;
 
 var tracer = Sdk.CreateTracerProviderBuilder()
     .AddJsonConsoleExporter(o => o.Targets = ConsoleExporterOutputTargets.Debug)
@@ -34,6 +35,24 @@ var metrics = Sdk.CreateMeterProviderBuilder()
     .AddJsonConsoleExporter(o => o.Targets = ConsoleExporterOutputTargets.Debug)
     // Add instrumentation sources to the provider
     .Build();
+```
+
+With ASP.NET Core:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+if (Debugger.IsAttached)
+{
+    const ConsoleExporterOutputTargets target = ConsoleExporterOutputTargets.Debug;
+    
+    builder.Logging.ClearProviders()
+        .AddOpenTelemetry(b => b.AddJsonConsoleExporter(o => o.Targets = target));
+
+    builder.Services.AddOpenTelemetry()
+        .WithTracing(b => b.AddJsonConsoleExporter(o => o.Targets = target))
+        .WithMetrics(b => b.AddJsonConsoleExporter(o => o.Targets = target));
+}
 ```
 
 which enables export to debug output in JSON format.
