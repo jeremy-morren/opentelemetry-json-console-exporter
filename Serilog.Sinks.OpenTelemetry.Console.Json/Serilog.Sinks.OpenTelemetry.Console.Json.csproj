@@ -5,8 +5,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
-        <Description>Console/Debug exporter (JSON) for OpenTelemetry .NET for debugging</Description>
-        <PackageTags>opentelemetry;console;distributed-tracing;json;opentelemetry-console;debug;serilog</PackageTags>
+        <Description>Serilog sink that prints to JSON to Console/Debug in OpenTelemetry format</Description>
+        <PackageTags>$(PackageTags);serilog</PackageTags>
         <PackageId>JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json</PackageId>
     </PropertyGroup>
 

@@ -4,7 +4,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Description>Console/Debug exporter (JSON) for OpenTelemetry .NET for debugging</Description>
-        <PackageTags>opentelemetry;console;distributed-tracing;json;opentelemetry-console;debug</PackageTags>
 
         <PackageId>JeremyMorren.OpenTelemetry.Exporter.Console.Json</PackageId>
     </PropertyGroup>
