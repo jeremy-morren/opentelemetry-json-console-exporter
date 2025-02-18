@@ -25,10 +25,10 @@ public static class ConsoleJsonExporterTracingExtensions
     /// Adds <see cref="ConsoleJsonActivityExporter"/> to the <see cref="TracerProviderBuilder"/>
     /// </summary>
     /// <param name="builder"><see cref="TracerProviderBuilder"/> builder to use.</param>
-    /// <param name="configure">Callback action for configuring <see cref="ConsoleExporterOptions"/>.</param>
+    /// <param name="configure">Callback action for configuring <see cref="ConsoleJsonActivityExporterOptions"/>.</param>
     /// <returns>The instance of <see cref="TracerProviderBuilder"/> to chain the calls.</returns>
     public static TracerProviderBuilder AddJsonConsoleExporter(this TracerProviderBuilder builder,
-        Action<ConsoleExporterOptions> configure)
+        Action<ConsoleJsonActivityExporterOptions> configure)
         => AddJsonConsoleExporter(builder, name: null, configure);
 
     /// <summary>
@@ -36,12 +36,12 @@ public static class ConsoleJsonExporterTracingExtensions
     /// </summary>
     /// <param name="builder"><see cref="TracerProviderBuilder"/> builder to use.</param>
     /// <param name="name">Optional name which is used when retrieving options.</param>
-    /// <param name="configure">Optional callback action for configuring <see cref="ConsoleExporterOptions"/>.</param>
+    /// <param name="configure">Optional callback action for configuring <see cref="ConsoleJsonActivityExporterOptions"/>.</param>
     /// <returns>The instance of <see cref="TracerProviderBuilder"/> to chain the calls.</returns>
     public static TracerProviderBuilder AddJsonConsoleExporter(
         this TracerProviderBuilder builder,
         string? name,
-        Action<ConsoleExporterOptions>? configure)
+        Action<ConsoleJsonActivityExporterOptions>? configure)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -54,7 +54,7 @@ public static class ConsoleJsonExporterTracingExtensions
 
         return builder.AddProcessor(sp =>
         {
-            var options = sp.GetRequiredService<IOptionsMonitor<ConsoleExporterOptions>>().Get(name);
+            var options = sp.GetRequiredService<IOptionsMonitor<ConsoleJsonActivityExporterOptions>>().Get(name);
 
             return new SimpleActivityExportProcessor(new ConsoleJsonActivityExporter(options));
         });

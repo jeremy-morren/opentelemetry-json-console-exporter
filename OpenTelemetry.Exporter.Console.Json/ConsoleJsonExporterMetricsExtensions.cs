@@ -30,9 +30,9 @@ public static class ConsoleJsonExporterMetricsExtensions
     /// Adds <see cref="ConsoleMetricExporter"/> to the <see cref="MeterProviderBuilder"/>.
     /// </summary>
     /// <param name="builder"><see cref="MeterProviderBuilder"/> builder to use.</param>
-    /// <param name="configureExporter">Callback action for configuring <see cref="ConsoleExporterOptions"/>.</param>
+    /// <param name="configureExporter">Callback action for configuring <see cref="ConsoleJsonMetricExporterOptions"/>.</param>
     /// <returns>The instance of <see cref="MeterProviderBuilder"/> to chain the calls.</returns>
-    public static MeterProviderBuilder AddJsonConsoleExporter(this MeterProviderBuilder builder, Action<ConsoleExporterOptions> configureExporter)
+    public static MeterProviderBuilder AddJsonConsoleExporter(this MeterProviderBuilder builder, Action<ConsoleJsonMetricExporterOptions> configureExporter)
         => AddJsonConsoleExporter(builder, name: null, configureExporter);
 
     /// <summary>
@@ -40,12 +40,12 @@ public static class ConsoleJsonExporterMetricsExtensions
     /// </summary>
     /// <param name="builder"><see cref="MeterProviderBuilder"/> builder to use.</param>
     /// <param name="name">Optional name which is used when retrieving options.</param>
-    /// <param name="configureExporter">Optional callback action for configuring <see cref="ConsoleExporterOptions"/>.</param>
+    /// <param name="configureExporter">Optional callback action for configuring <see cref="ConsoleJsonMetricExporterOptions"/>.</param>
     /// <returns>The instance of <see cref="MeterProviderBuilder"/> to chain the calls.</returns>
     public static MeterProviderBuilder AddJsonConsoleExporter(
         this MeterProviderBuilder builder,
         string? name,
-        Action<ConsoleExporterOptions>? configureExporter)
+        Action<ConsoleJsonMetricExporterOptions>? configureExporter)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -57,7 +57,7 @@ public static class ConsoleJsonExporterMetricsExtensions
         }
 
         return builder.AddReader(sp => BuildConsoleJsonExporterMetricReader(
-            sp.GetRequiredService<IOptionsMonitor<ConsoleExporterOptions>>().Get(name),
+            sp.GetRequiredService<IOptionsMonitor<ConsoleJsonMetricExporterOptions>>().Get(name),
             sp.GetRequiredService<IOptionsMonitor<MetricReaderOptions>>().Get(name)));
     }
 
@@ -66,12 +66,12 @@ public static class ConsoleJsonExporterMetricsExtensions
     /// </summary>
     /// <param name="builder"><see cref="MeterProviderBuilder"/> builder to use.</param>
     /// <param name="configureExporterAndMetricReader">Callback action for
-    /// configuring <see cref="ConsoleExporterOptions"/> and <see
+    /// configuring <see cref="ConsoleJsonMetricExporterOptions"/> and <see
     /// cref="MetricReaderOptions"/>.</param>
     /// <returns>The instance of <see cref="MeterProviderBuilder"/> to chain the calls.</returns>
     public static MeterProviderBuilder AddJsonConsoleExporter(
         this MeterProviderBuilder builder,
-        Action<ConsoleExporterOptions, MetricReaderOptions>? configureExporterAndMetricReader)
+        Action<ConsoleJsonMetricExporterOptions, MetricReaderOptions>? configureExporterAndMetricReader)
         => AddJsonConsoleExporter(builder, name: null, configureExporterAndMetricReader);
 
     /// <summary>
@@ -80,13 +80,13 @@ public static class ConsoleJsonExporterMetricsExtensions
     /// <param name="builder"><see cref="MeterProviderBuilder"/> builder to use.</param>
     /// <param name="name">Name which is used when retrieving options.</param>
     /// <param name="configureExporterAndMetricReader">Callback action for
-    /// configuring <see cref="ConsoleExporterOptions"/> and <see
+    /// configuring <see cref="ConsoleJsonMetricExporterOptions"/> and <see
     /// cref="MetricReaderOptions"/>.</param>
     /// <returns>The instance of <see cref="MeterProviderBuilder"/> to chain the calls.</returns>
     public static MeterProviderBuilder AddJsonConsoleExporter(
         this MeterProviderBuilder builder,
         string? name,
-        Action<ConsoleExporterOptions, MetricReaderOptions>? configureExporterAndMetricReader)
+        Action<ConsoleJsonMetricExporterOptions, MetricReaderOptions>? configureExporterAndMetricReader)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -94,7 +94,7 @@ public static class ConsoleJsonExporterMetricsExtensions
 
         return builder.AddReader(sp =>
         {
-            var exporterOptions = sp.GetRequiredService<IOptionsMonitor<ConsoleExporterOptions>>().Get(name);
+            var exporterOptions = sp.GetRequiredService<IOptionsMonitor<ConsoleJsonMetricExporterOptions>>().Get(name);
             var metricReaderOptions = sp.GetRequiredService<IOptionsMonitor<MetricReaderOptions>>().Get(name);
 
             configureExporterAndMetricReader?.Invoke(exporterOptions, metricReaderOptions);
@@ -104,7 +104,7 @@ public static class ConsoleJsonExporterMetricsExtensions
     }
 
     private static MetricReader BuildConsoleJsonExporterMetricReader(
-        ConsoleExporterOptions exporterOptions,
+        ConsoleJsonMetricExporterOptions exporterOptions,
         MetricReaderOptions options)
     {
         var exporter = new ConsoleJsonMetricExporter(exporterOptions);

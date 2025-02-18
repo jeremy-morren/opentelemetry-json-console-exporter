@@ -25,6 +25,8 @@ public class ConsoleJsonLogRecordExporter : ConsoleJsonExporter<LogRecord>
     {
     }
 
+    internal override bool ShouldExport(LogRecord value) => true;
+
     internal override Telemetry CreateTelemetry(LogRecord value, Resource resource) => new(value, resource);
 
     /// <inheritdoc />

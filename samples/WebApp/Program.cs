@@ -32,8 +32,16 @@ if (Debugger.IsAttached)
     });
 
     builder.Services.AddOpenTelemetry()
-        .WithTracing(b => b.AddJsonConsoleExporter(o => o.Targets = target))
-        .WithMetrics(b => b.AddJsonConsoleExporter(o => o.Targets = target));
+        .WithTracing(b => b.AddJsonConsoleExporter(o =>
+        {
+            o.Targets = target;
+            o.Filter = a => true;
+        }))
+        .WithMetrics(b => b.AddJsonConsoleExporter(o =>
+        {
+            o.Targets = target;
+            o.Filter = m => true;
+        }));
 }
 
 builder.Services.AddOpenTelemetry()

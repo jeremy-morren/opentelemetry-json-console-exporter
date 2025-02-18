@@ -3,6 +3,8 @@ using System.Text.Json;
 using OpenTelemetry.Exporter.Console.Json.Models;
 using OpenTelemetry.Resources;
 
+// ReSharper disable MemberCanBeProtected.Global
+
 namespace OpenTelemetry.Exporter.Console.Json;
 
 /// <summary>
@@ -22,6 +24,8 @@ public abstract class ConsoleJsonExporter<T> : ConsoleExporter<T> where T : clas
     {
     }
 
+    internal abstract bool ShouldExport(T value);
+
     internal abstract Telemetry CreateTelemetry(T value, Resource resource);
 
     /// <inheritdoc />
@@ -32,6 +36,7 @@ public abstract class ConsoleJsonExporter<T> : ConsoleExporter<T> where T : clas
         {
             try
             {
+                if (!ShouldExport(value)) continue;
                 var resource = ParentProvider.GetResource();
                 var telemetry = CreateTelemetry(value, resource);
                 var json = JsonSerializer.Serialize(telemetry, TelemetryJsonContext.Default.Telemetry);
