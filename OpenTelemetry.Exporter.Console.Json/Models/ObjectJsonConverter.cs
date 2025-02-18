@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace OpenTelemetry.Exporter.Console.Json.Models;
@@ -21,7 +22,7 @@ internal class ObjectJsonConverter : JsonConverter<object?>
     public override void Write(Utf8JsonWriter writer, object? value, JsonSerializerOptions _)
     {
         if (value is Type type)
-            value = type.FullName;
+            value = type.FullName ?? type.Name;
         JsonSerializer.Serialize(writer, value, Options);
     }
 

@@ -36,11 +36,10 @@ internal readonly record struct LogRecordInfo
     public string? Body => _log.Body;
 
     public Dictionary<string, object?>? Attributes => _log.Attributes?.CreateDictionary();
-    public Dictionary<string, string?>? FormattedAttributes => Attributes?.FormatValues();
 
     public ExceptionInfo? Exception => _log.Exception != null ? new ExceptionInfo(_log.Exception) : null;
 
-    public List<LogRecordScopeInfo> Scope => LogScopeSerializer.SerializeScope(_log);
+    public List<Dictionary<string, object?>> Scope => LogScopeSerializer.SerializeScope(_log);
 }
 
 internal readonly record struct ExceptionInfo
@@ -67,11 +66,4 @@ internal readonly record struct ExceptionInfo
         : null;
 
     public string Display => _exception.ToInvariantString();
-}
-
-internal readonly record struct LogRecordScopeInfo
-{
-    public required Dictionary<string, object?> Values { get; init; }
-
-    public required Dictionary<string, string?> Formatted { get; init; }
 }

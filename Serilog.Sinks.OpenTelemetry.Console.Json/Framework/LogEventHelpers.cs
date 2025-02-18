@@ -34,34 +34,6 @@ internal static class LogEventHelpers
         return false;
     }
 
-    public static Dictionary<string, string?> GetAttributes(this LogEvent log)
-    {
-        return log.Properties.ToDictionary(k => k.Key, v => Serialize(v.Value));
-
-        static string? Serialize(LogEventPropertyValue value)
-        {
-            switch (value)
-            {
-                case ScalarValue v:
-                    return v.Value?.ToString();
-                case StructureValue s:
-                {
-                    var sb = new StringWriter();
-                    s.Render(sb);
-                    return sb.ToString();
-                }
-                case SequenceValue s:
-                {
-                    var sb = new StringWriter();
-                    s.Render(sb);
-                    return sb.ToString();
-                }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(value));
-            }
-        }
-    }
-
     public static Dictionary<string, object?> GetAttributeObjects(this LogEvent log)
     {
         return log.Properties.ToDictionary(k => k.Key, v => Serialize(v.Value));

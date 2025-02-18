@@ -41,7 +41,6 @@ internal readonly struct ActivityInfo
     public string? StatusDescription => _activity.StatusDescription;
 
     public Dictionary<string, object?> Tags => _activity.TagObjects.CreateDictionary();
-    public Dictionary<string, string?> FormattedTags => Tags.FormatValues();
 
     public IEnumerable<ActivityEventInfo> Events => _activity.Events.Select(e => new ActivityEventInfo(e));
 
@@ -66,8 +65,6 @@ internal readonly struct ActivityEventInfo
     public DateTimeOffset Timestamp => _activityEvent.Timestamp;
 
     public Dictionary<string, object?> Tags => _activityEvent.Tags.CreateDictionary();
-
-    public Dictionary<string, string?> FormattedTags => Tags.FormatValues();
 }
 
 internal readonly struct ActivityLinkInfo
@@ -82,6 +79,4 @@ internal readonly struct ActivityLinkInfo
     public string? Context => _activityLink.Context.ToString();
 
     public Dictionary<string, object?>? Tags => _activityLink.Tags?.CreateDictionary();
-
-    public Dictionary<string, string?>? FormattedTags => Tags?.FormatValues();
 }

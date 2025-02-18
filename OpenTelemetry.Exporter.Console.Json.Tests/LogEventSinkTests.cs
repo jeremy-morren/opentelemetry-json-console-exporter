@@ -38,8 +38,6 @@ public class LogEventSinkTests
             telemetry.Log.CategoryName.Should().Be(typeof(LogEventSinkTests).FullName);
             telemetry.Log.FormattedMessage.Should().Contain("World!");
 
-            telemetry.Log.FormattedAttributes.Should().Contain("Name", "World");
-
             telemetry.Log.Attributes.Should()
                 .ContainKey("Index").And
                 .ContainKey("Enum").And

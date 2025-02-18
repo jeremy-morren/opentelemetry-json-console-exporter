@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using OpenTelemetry.Exporter.Console.Json.Framework;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -42,5 +43,5 @@ internal class Telemetry
 
     public LogRecordInfo? Log { get; }
 
-    public ResourceInfo? Resource => _resource != null ? new ResourceInfo(_resource) : null;
+    public Dictionary<string, object>? Resource => _resource?.Attributes.CreateDictionary();
 }

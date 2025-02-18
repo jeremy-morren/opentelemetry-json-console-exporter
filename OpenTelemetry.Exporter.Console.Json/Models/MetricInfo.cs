@@ -1,4 +1,5 @@
-﻿using OpenTelemetry.Exporter.Console.Json.Framework;
+﻿using System.Text.Json.Serialization;
+using OpenTelemetry.Exporter.Console.Json.Framework;
 using OpenTelemetry.Metrics;
 
 namespace OpenTelemetry.Exporter.Console.Json.Models;
@@ -7,10 +8,7 @@ internal readonly struct MetricInfo
 {
     private readonly Metric _metric;
 
-    public MetricInfo(Metric metric)
-    {
-        _metric = metric;
-    }
+    public MetricInfo(Metric metric) => _metric = metric;
 
     public MetricType MetricType => _metric.MetricType;
 
@@ -27,7 +25,6 @@ internal readonly struct MetricInfo
     public string MeterVersion => _metric.MeterVersion;
 
     public Dictionary<string, object?>? MeterTags => _metric.MeterTags?.CreateDictionary();
-    public Dictionary<string, string?>? FormattedMeterTags => MeterTags?.FormatValues();
 
     public IEnumerable<MetricPointInfo> Points => EnumeratePoints(_metric.GetMetricPoints(), _metric.MetricType);
 
@@ -68,12 +65,31 @@ internal readonly struct MetricPointInfo
         ? _metricPoint.GetHistogramSum()
         : null;
 
-    public IEnumerable<HistogramBucket>? HistogramBuckets =>
+    public IEnumerable<HistogramBucketInfo>? HistogramBuckets =>
         _type is MetricType.Histogram or MetricType.ExponentialHistogram
-            ? _metricPoint.GetHistogramBuckets().ToEnumerable()
+            ? HistogramBucketInfo.New(_metricPoint.GetHistogramBuckets())
             : null;
 
     public Dictionary<string, object?> Tags => _metricPoint.Tags.ToEnumerable().CreateDictionary();
+}
 
-    public Dictionary<string, string?> FormattedTags => Tags.FormatValues();
+internal readonly record struct HistogramBucketInfo
+{
+    private readonly HistogramBucket _bucket;
+
+    private HistogramBucketInfo(HistogramBucket bucket) => _bucket = bucket;
+
+    // There can be quite a few buckets, so we shorten the output by using property names
+    
+    [JsonPropertyName("@eb")]
+    public double ExplicitBound => _bucket.ExplicitBound;
+    
+    [JsonPropertyName("@bc")]
+    public long BucketCount => _bucket.BucketCount;
+
+    public static IEnumerable<HistogramBucketInfo> New(HistogramBuckets buckets)
+    {
+        foreach (var bucket in buckets)
+            yield return new HistogramBucketInfo(bucket);
+    }
 }

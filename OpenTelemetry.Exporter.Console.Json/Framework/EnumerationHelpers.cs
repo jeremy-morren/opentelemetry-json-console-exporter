@@ -7,12 +7,6 @@ namespace OpenTelemetry.Exporter.Console.Json.Framework;
 /// </summary>
 internal static class EnumerationHelpers
 {
-    public static IEnumerable<HistogramBucket> ToEnumerable(this HistogramBuckets buckets)
-    {
-        foreach (var b in buckets)
-            yield return b;
-    }
-
     public static IEnumerable<KeyValuePair<string, object?>> ToEnumerable(this ReadOnlyTagCollection collection)
     {
         foreach (var pair in collection)

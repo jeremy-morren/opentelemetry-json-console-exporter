@@ -32,8 +32,6 @@ internal readonly record struct LogRecordInfo
 
     public string Body => _log.MessageTemplate.Text;
 
-    public Dictionary<string, string?> FormattedAttributes => _log.GetAttributes();
-
     public Dictionary<string, object?> Attributes => _log.GetAttributeObjects();
 
     public ExceptionInfo? Exception => _log.Exception != null ? new ExceptionInfo(_log.Exception) : null;

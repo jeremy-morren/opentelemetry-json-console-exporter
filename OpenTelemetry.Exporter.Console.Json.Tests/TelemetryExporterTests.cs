@@ -144,21 +144,16 @@ public class TelemetryExporterTests
             telemetry.Log.CategoryName.Should().Be(typeof(TelemetryExporterTests).FullName);
 
             telemetry.Log.Attributes.Should().ContainKey("{OriginalFormat}");
-            telemetry.Log.FormattedAttributes["{OriginalFormat}"].Should().Be(telemetry.Log.Body);
-
+            
             if (includeScopes)
             {
                 telemetry.Log.Scope.Should().HaveCount(2);
-                telemetry.Log.Scope.Should().AllSatisfy(scope =>
-                {
-                    scope.Values.Should()
+                telemetry.Log.Scope.Should().AllSatisfy(scope => 
+                    scope.Should()
                         .ContainKey("Id").And
                         .ContainKey("Type").And
                         .ContainKey("Index").And
-                        .ContainKey("Enum");
-                    scope.Formatted.Should()
-                        .ContainKey("Object");
-                });
+                        .ContainKey("Enum"));
             }
             else
             {
@@ -171,9 +166,6 @@ public class TelemetryExporterTests
                 telemetry.Log.Attributes.Should()
                     .ContainKey("IntProp")
                     .And.ContainKey("FormattedProp");
-                telemetry.Log.FormattedAttributes.Should()
-                    .ContainKey("IntProp")
-                    .And.ContainKey("FormattedProp", "5");
 
                 telemetry.Log.FormattedMessage.Should().MatchRegex(@"Test \d+\. Formatted: 5\.0");
             }
