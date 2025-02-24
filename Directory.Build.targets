@@ -57,7 +57,5 @@
             <_GitTag Condition="'$(_GitTag)' == ''">$(SourceRevisionIdFull)</_GitTag>
             <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">$(_GitOriginUrl)/blob/$(_GitTag)/README.md</PackageProjectUrl>
         </PropertyGroup>
-
-        <Message Importance="high" Text="Package project: $(PackageProjectUrl)" />
     </Target>
 </Project>
