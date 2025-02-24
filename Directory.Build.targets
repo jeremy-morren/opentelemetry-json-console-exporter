@@ -13,16 +13,6 @@
             <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput"/>
         </Exec>
 
-        <!-- Get the full git commit id (40 characters) -->
-        <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; describe --long --always --exclude=* --abbrev=40"
-              ConsoleToMsBuild="True"
-              IgnoreExitCode="false"
-              EchoOff="true"
-              LogStandardErrorAsError="true"
-              StandardOutputImportance="low" >
-            <Output PropertyName="SourceRevisionIdFull" TaskParameter="ConsoleOutput"/>
-        </Exec>
-
         <!-- Get the git origin URL -->
         <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; remote get-url origin"
               ConsoleToMsBuild="True"
@@ -33,15 +23,41 @@
             <Output PropertyName="_GitOriginUrl" TaskParameter="ConsoleOutput"/>
         </Exec>
 
+        <!-- Get the full git commit id (40 characters) -->
+        <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; describe --long --always --exclude=* --abbrev=40"
+              ConsoleToMsBuild="True"
+              IgnoreExitCode="false"
+              EchoOff="true"
+              LogStandardErrorAsError="true"
+              StandardOutputImportance="low">
+            <Output PropertyName="SourceRevisionIdFull" TaskParameter="ConsoleOutput"/>
+        </Exec>
+
+        <!-- Get the first tag that points to HEAD -->
+        <Exec Command="git -C &quot;$(MSBuildProjectDirectory)&quot; for-each-ref --count=1 &quot;--format=%(refname:short)&quot; refs/tags --points-at HEAD"
+              ConsoleToMsBuild="True"
+              IgnoreExitCode="false"
+              EchoOff="true"
+              LogStandardErrorAsError="true"
+              StandardOutputImportance="low" >
+            <Output PropertyName="_GitTag" TaskParameter="ConsoleOutput"/>
+        </Exec>
+
         <PropertyGroup>
             <!-- Add repository information to the build -->
             <RepositoryType Condition="'$(RepositoryType)' == ''">git</RepositoryType>
             <RepositoryCommit Condition="'$(RepositoryCommitId)' == ''">$(SourceRevisionIdFull)</RepositoryCommit>
 
-            <!-- Set repository and project URLs to the git repository URL if not already set -->
+            <!-- Set repository to the git repository URL if not already set -->
             <RepositoryUrl Condition="'$(RepositoryUrl)' == ''">$(_GitOriginUrl)</RepositoryUrl>
-            <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">$(_GitOriginUrl)</PackageProjectUrl>
 
+            <!-- Github only -->
+            <!-- Set the package project URL go to README.md -->
+            <!-- Use tag if available, otherwise use commit id -->
+            <_GitTag Condition="'$(_GitTag)' == ''">$(SourceRevisionIdFull)</_GitTag>
+            <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">$(_GitOriginUrl)/blob/$(_GitTag)/README.md</PackageProjectUrl>
         </PropertyGroup>
+
+        <Message Importance="high" Text="Package project: $(PackageProjectUrl)" />
     </Target>
 </Project>
