@@ -41,29 +41,3 @@ internal readonly record struct LogRecordInfo
 
     public List<Dictionary<string, object?>> Scope => LogScopeSerializer.SerializeScope(_log);
 }
-
-internal readonly record struct ExceptionInfo
-{
-    private readonly Exception _exception;
-
-    public ExceptionInfo(Exception exception)
-    {
-        _exception = exception;
-    }
-
-    public string? Type => _exception.GetType().FullName;
-
-    public string Message => _exception.Message;
-
-    public string? StackTrace => _exception.StackTrace;
-
-    public string? Source => _exception.Source;
-
-    public int HResult => _exception.HResult;
-
-    public ExceptionInfo? InnerException => _exception.InnerException != null
-        ? new ExceptionInfo(_exception.InnerException)
-        : null;
-
-    public string Display => _exception.ToInvariantString();
-}

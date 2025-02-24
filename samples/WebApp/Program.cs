@@ -45,13 +45,16 @@ if (Debugger.IsAttached)
 }
 
 builder.Services.AddOpenTelemetry()
-
     .WithTracing(b => b
         .AddSource(TelemetryLoop.Source.Name)
-        .AddSqlClientInstrumentation(o => o.SetDbStatementForText = true)
-        .AddHttpClientInstrumentation()
-        .AddNpgsql()
-        .AddAspNetCoreInstrumentation())
+        .AddSqlClientInstrumentation(o =>
+        {
+            o.SetDbStatementForText = true;
+            o.RecordException = true;
+        })
+        .AddHttpClientInstrumentation(o => o.RecordException = true)
+        .AddAspNetCoreInstrumentation(o => o.RecordException = true)
+        .AddNpgsql())
 
     .WithMetrics(b => b
         .AddNpgsqlInstrumentation()

@@ -26,8 +26,9 @@
         <Compile Include="..\OpenTelemetry.Exporter.Console.Json\Framework\SerializationHelpers.cs"
                  Link="Framework\SerializationHelpers.cs"/>
         <Compile Include="..\OpenTelemetry.Exporter.Console.Json\Models\ObjectJsonConverter.cs" 
-                 Link="Models\ObjectJsonConverter.cs">
-        </Compile>
+                 Link="Models\ObjectJsonConverter.cs"/>
+        <Compile Include="..\OpenTelemetry.Exporter.Console.Json\Models\ExceptionInfo.cs" 
+                 Link="Models\ExceptionInfo.cs"/>
     </ItemGroup>
 
     <ItemGroup>
