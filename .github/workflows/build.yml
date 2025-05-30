@@ -90,5 +90,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >-
-          gh release create "$VERSION" --draft --title "$VERSION" --notes "Release $VERSION" &&
+          gh release create "$VERSION" --draft --title "$VERSION" --generate-notes &&
           gh release upload "$VERSION" packages/*
