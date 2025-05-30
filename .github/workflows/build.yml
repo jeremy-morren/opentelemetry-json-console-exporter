@@ -41,7 +41,9 @@ jobs:
         if: ${{ always() }}
 
       - name: Set package version
-        run: echo "version=$(cat ${{ runner.temp }}/PackageVersion)" >> $GITHUB_ENV
+        run: |
+          echo "version=$(cat ${{ runner.temp }}/PackageVersion)"
+          echo "version=$(cat ${{ runner.temp }}/PackageVersion)" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v4
         name: Upload NuGet package
