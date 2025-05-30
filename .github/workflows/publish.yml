@@ -1,0 +1,37 @@
+﻿# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+# GitHub Actions Workflow created for handling the release process based on the draft release prepared with the Build workflow.
+
+name: Publish
+on:
+  release:
+    types: [published]
+
+jobs:
+  # Publish the packages to NuGet
+  release:
+    name: Publish ${{ github.event.release.name }} to NuGet
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      # Download the artifacts from the release and publish them to NuGet
+      - name: Download Artifacts
+        run: gh release download "${{ github.event.release.name }}" --pattern '*nupkg'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to NuGet
+        run: dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_APIKEY"
+        env:
+          NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}

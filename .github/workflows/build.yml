@@ -1,0 +1,104 @@
+﻿# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Build
+on:
+  # Trigger the workflow on pushes to only the 'main' branch (this avoids duplicate checks being run e.g., for dependabot pull requests)
+  push:
+    branches: [ main ]
+  # Trigger the workflow on any pull request
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace }}/Packages
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      - run: dotnet build --configuration Release -p:PackageVersionOutputFile=${{ runner.temp }}/PackageVersion
+        name: Build
+
+      - run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
+        name: Test
+
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+        if: ${{ always() }}
+
+      - name: Set package version
+        id: set_version
+        run: echo "version=$(cat ${{ runner.temp }}/PackageVersion)" >> $GITHUB_OUTPUT
+
+      - uses: actions/upload-artifact@v4
+        name: Upload NuGet package
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{ env.NuGetDirectory }}
+
+  # Prepare a draft release for GitHub Releases page for the manual verification
+  # If accepted and published, release workflow would be triggered
+  releaseDraft:
+    name: Release draft
+    if: github.event_name != 'pull_request'
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: v${{ needs.build.outputs.version }}
+    steps:
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        name: Download NuGet package
+        with:
+          name: nuget
+          path: packages
+
+      # Remove old release drafts by using the curl request for the available releases with a draft flag
+      - name: Remove Old Release Drafts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh api repos/{owner}/{repo}/releases
+          --jq '.[] | select(.draft == true) | .id'
+          | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
+
+      # Provide a flag for prerelease if the version contains a hyphen
+      # If this step doesn't run, steps.set_prelease.outputs.flag will not be set
+      - name: Set as Prerelease
+        id: set_prerelease
+        if: ${{ contains(needs.build.outputs.version, '-') }}
+        run: echo "flag=--prerelease" >> $GITHUB_OUTPUT
+
+      # Create a new release draft which is not publicly visible and requires manual acceptance
+      - name: Create Release Draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh release create "$VERSION" 
+          --draft --title "$VERSION" --generate-notes 
+          --target ${{ github.sha }} ${{ steps.set_prerelease.outputs.flag }} &&
+          gh release upload "$VERSION" packages/*

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <Description>Serilog sink that prints to JSON to Console/Debug in OpenTelemetry format</Description>
+        <PackageTags>$(PackageTags);serilog</PackageTags>
+        <PackageId>JeremyMorren.Serilog.Sinks.OpenTelemetry.Console.Json</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="$(OpenTelemetryVersion)" />
+        <PackageReference Include="Serilog" Version="4.0.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Compile Include="..\OpenTelemetry.Exporter.Console.Json\Constants.cs"
+                 Link="Framework\Constants.cs">
+        </Compile>
+        <Compile Include="..\OpenTelemetry.Exporter.Console.Json\Framework\SerializationHelpers.cs"
+                 Link="Framework\SerializationHelpers.cs"/>
+        <Compile Include="..\OpenTelemetry.Exporter.Console.Json\Models\ObjectJsonConverter.cs" 
+                 Link="Models\ObjectJsonConverter.cs"/>
+        <Compile Include="..\OpenTelemetry.Exporter.Console.Json\Models\ExceptionInfo.cs" 
+                 Link="Models\ExceptionInfo.cs"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="OpenTelemetry.Exporter.Console.Json.Tests, PublicKey=$(StrongNamePublicKey)" />
+    </ItemGroup>
+</Project>

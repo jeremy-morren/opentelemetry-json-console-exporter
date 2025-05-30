@@ -1,0 +1,17 @@
+﻿<Project>
+    <!-- Write the package version to $(PackageVersionOutputFile), if specified -->
+    <Target Name="WritePackageVersion"
+            AfterTargets="Build"
+            Condition="'$(PackageVersionOutputFile)' != ''">
+        <PropertyGroup>
+            <!-- Output the file relative to the MSBuild startup directory (i.e. working directory) -->
+            <_IsPathRooted>$([System.IO.Path]::IsPathRooted('$(PackageVersionOutputFile)'))</_IsPathRooted>
+            <_PackageVersionOutputFile Condition="$(_IsPathRooted)">$(PackageVersionOutputFile)</_PackageVersionOutputFile>
+            <_PackageVersionOutputFile Condition="!$(_IsPathRooted)">$(MSBuildStartupDirectory)/$(PackageVersionOutputFile)</_PackageVersionOutputFile>
+        </PropertyGroup>
+        <WriteLinesToFile File="$(_PackageVersionOutputFile)"
+                          Lines="$(PackageVersion)"
+                          Overwrite="true"
+                          WriteOnlyWhenDifferent="true"/>
+    </Target>
+</Project>

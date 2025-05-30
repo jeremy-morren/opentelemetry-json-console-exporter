@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetry.Exporter.Console.Json", "OpenTelemetry.Exporter.Console.Json\OpenTelemetry.Exporter.Console.Json.csproj", "{A6306479-553A-469C-90ED-AACAC335EE69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{38C3E80D-9497-45CC-A37F-B7D9F8082F50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "samples\WebApp\WebApp.csproj", "{AFD6EE00-20EB-4476-9938-D392D7449A0B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{105FC936-1611-4205-ACCB-AA5B1C45CBBA}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Sinks.OpenTelemetry.Console.Json", "Serilog.Sinks.OpenTelemetry.Console.Json\Serilog.Sinks.OpenTelemetry.Console.Json.csproj", "{80F18C9D-8845-49A6-AFF6-52AAF551F6C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTelemetry.Exporter.Console.Json.Tests", "OpenTelemetry.Exporter.Console.Json.Tests\OpenTelemetry.Exporter.Console.Json.Tests.csproj", "{E79C8900-CB72-4492-9CE8-0903F00576EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{3497FD17-0556-4666-84B8-E85EAB9FE984}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6306479-553A-469C-90ED-AACAC335EE69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6306479-553A-469C-90ED-AACAC335EE69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6306479-553A-469C-90ED-AACAC335EE69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6306479-553A-469C-90ED-AACAC335EE69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD6EE00-20EB-4476-9938-D392D7449A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD6EE00-20EB-4476-9938-D392D7449A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD6EE00-20EB-4476-9938-D392D7449A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD6EE00-20EB-4476-9938-D392D7449A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80F18C9D-8845-49A6-AFF6-52AAF551F6C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80F18C9D-8845-49A6-AFF6-52AAF551F6C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80F18C9D-8845-49A6-AFF6-52AAF551F6C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80F18C9D-8845-49A6-AFF6-52AAF551F6C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E79C8900-CB72-4492-9CE8-0903F00576EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E79C8900-CB72-4492-9CE8-0903F00576EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E79C8900-CB72-4492-9CE8-0903F00576EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E79C8900-CB72-4492-9CE8-0903F00576EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AFD6EE00-20EB-4476-9938-D392D7449A0B} = {38C3E80D-9497-45CC-A37F-B7D9F8082F50}
+	EndGlobalSection
+EndGlobal
