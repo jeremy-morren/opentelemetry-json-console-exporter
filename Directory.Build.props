@@ -3,6 +3,8 @@
         <Authors>Jeremy Morren</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
+        <Version>1.0.1-rc11</Version>
+
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageOutputPath>$(MSBuildThisFileDirectory)Packages</PackageOutputPath>
 
@@ -10,6 +12,7 @@
         
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
         <OpenTelemetryVersion>1.9.0</OpenTelemetryVersion>
 
@@ -22,17 +25,15 @@
         <StrongNamePublicKey>0024000004800000940000000602000000240000525341310004000001000100bd2453aa99d5b69302dc90f65ec19e63e5c9cee5a06d904146bffdd9a089a20a8b39df9a910bf60362c71207e0bc52ce7a40ac5c5065a61f2181d33cfa4aed52e30db2f2fee0ce8b628cf89a55c40a4879272c923f6690d2192019c7740142c169d617f674d3903163c811939cf99d6356c43286c704d1cfcd4c82b5b30581a4</StrongNamePublicKey>
     </PropertyGroup>
 
-    <!-- Get version from package version, if set -->
-    <PropertyGroup Condition="'$(ReleaseVersion)' != ''">
-        <!-- Remove leading 'v' -->
-        <PackageVersion>$(ReleaseVersion.Substring(1))</PackageVersion>
-
-        <!-- Set version and assembly version -->
-        <Version>$(PackageVersion)</Version>
-        <AssemblyVersion>$(PackageVersion.Split('-')[0])</AssemblyVersion>
+    <!-- Set assembly version (without release candidate suffix) -->
+    <PropertyGroup Condition="'$(Version)' != ''">
+        <AssemblyVersion>$(Version.Split('-')[0])</AssemblyVersion>
     </PropertyGroup>
 
-    <ItemGroup>
+    <!-- Include source link and README for packages -->
+    <ItemGroup Condition="'$(IsPackable)' == 'true'">
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+
         <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="" Visible="false"/>
     </ItemGroup>
 </Project>

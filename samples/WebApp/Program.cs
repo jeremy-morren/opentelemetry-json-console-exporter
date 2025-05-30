@@ -12,37 +12,27 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHostedService<TelemetryLoop>();
 
+builder.Logging.ClearProviders();
+
 if (Debugger.IsAttached)
 {
-    const ConsoleExporterOutputTargets target = ConsoleExporterOutputTargets.Debug;
+    builder.Services.AddOpenTelemetry()
+        .AddJsonConsoleExporter(
+            o => o.Targets = ConsoleExporterOutputTargets.Debug,
+            o => o.Filter = a => true,
+            o => o.Filter = m => true);
+}
 
-    // builder.Logging.ClearProviders()
-    //     .AddOpenTelemetry(b =>
-    //     {
-    //         b.IncludeScopes = true;
-    //         b.AddJsonConsoleExporter(o => o.Targets = target);
-    //     });
-
-    builder.Host.UseSerilog((context, services, logger) =>
+builder.Host.UseSerilog((context, services, logger) =>
     {
-        logger.WriteTo.OpenTelemetryConsoleJson(target)
+        logger
+            .WriteTo.Console()
+            // .WriteTo.OpenTelemetryConsoleJson(ConsoleExporterOutputTargets.Debug)
             .ReadFrom.Configuration(context.Configuration)
             .ReadFrom.Services(services)
             .Enrich.FromLogContext();
-    });
-
-    builder.Services.AddOpenTelemetry()
-        .WithTracing(b => b.AddJsonConsoleExporter(o =>
-        {
-            o.Targets = target;
-            o.Filter = a => true;
-        }))
-        .WithMetrics(b => b.AddJsonConsoleExporter(o =>
-        {
-            o.Targets = target;
-            o.Filter = m => true;
-        }));
-}
+    },
+    writeToProviders: true);
 
 builder.Services.AddOpenTelemetry()
     .WithTracing(b => b
@@ -62,7 +52,6 @@ builder.Services.AddOpenTelemetry()
         .AddHttpClientInstrumentation()
         .AddSqlClientInstrumentation()
         .AddProcessInstrumentation());
-
 
 builder.Services.AddControllers();
 

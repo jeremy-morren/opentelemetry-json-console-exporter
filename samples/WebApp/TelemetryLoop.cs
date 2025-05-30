@@ -15,10 +15,9 @@ public class TelemetryLoop(ILogger<TelemetryLoop> logger) : BackgroundService
             while (!stoppingToken.IsCancellationRequested)
             {
                 await ConnectToSqlServer();
-                await DoSomeWork();
                 await ConnectToPg();
+                await DoSomeWork();
                 await HttpRequest();
-                // await DoSomeWork("pineapple", 10);
                 await Task.Delay(5000, stoppingToken);
             }
         }
