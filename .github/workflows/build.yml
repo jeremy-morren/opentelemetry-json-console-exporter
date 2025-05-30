@@ -26,7 +26,8 @@ jobs:
     steps:
       - id: set_version
         run: |
-          echo "version=1.0.1-rc11" >> "$GITHUB_OUTPUT"
+          echo "1.0.1-rc11" > file
+          echo "version=$(cat file)" >> "$GITHUB_OUTPUT"
 
 #      - uses: actions/checkout@v4
 #
