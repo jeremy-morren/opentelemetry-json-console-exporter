@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - run: 'echo "${{ needs.job1.outputs.version }}"'
+      - run: 'echo "${{ needs.build.outputs.version }}"'
 
 #jobs:
 #  build:
