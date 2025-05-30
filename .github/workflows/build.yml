@@ -66,8 +66,6 @@ jobs:
     env:
       VERSION: v${{ needs.build.outputs.version }}
     steps:
-      - run: 'echo "${{ needs.build.outputs.version }}"'
-
       # Check out the current repository
       - name: Fetch Sources
         uses: actions/checkout@v4

@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <Description>Console/Debug exporter (JSON) for OpenTelemetry .NET for debugging</Description>
 
-        <PackageId>JeremyMorren.OpenTelemetry.Exporter.Console.Json</PackageId>
+        <PackageId>OpenTelemetry.Exporter.Console.Json</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
