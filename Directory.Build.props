@@ -1,9 +1,9 @@
 ﻿<Project>
     <PropertyGroup>
+        <Version>1.0.1-rc1</Version>
+
         <Authors>Jeremy Morren</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-
-        <Version>1.0.1-rc11</Version>
 
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageOutputPath>$(MSBuildThisFileDirectory)Packages</PackageOutputPath>
