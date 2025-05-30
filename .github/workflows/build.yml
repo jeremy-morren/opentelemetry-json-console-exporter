@@ -19,26 +19,14 @@ env:
 
 jobs:
   build:
+    name: Build and Test
     runs-on: ubuntu-latest
-    # Map a step output to a job output
     outputs:
       version: ${{ steps.set_version.outputs.version }}
     steps:
       - id: set_version
         run: echo "version=v1" >> "$GITHUB_OUTPUT"
-  job2:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - run: 'echo "${{ needs.build.outputs.version }}"'
 
-#jobs:
-#  build:
-#    name: Build and Test
-#    runs-on: ubuntu-latest
-#    outputs:
-#      version: ${{ steps.set_version.outputs.version }}
-#    steps:
 #      - uses: actions/checkout@v4
 #
 #      - name: Setup .NET
@@ -68,17 +56,19 @@ jobs:
 #          if-no-files-found: error
 #          retention-days: 7
 #          path: ${{ env.NuGetDirectory }}
-#
-#  # Prepare a draft release for GitHub Releases page for the manual verification
-#  # If accepted and published, release workflow would be triggered
-#  releaseDraft:
-#    name: Release draft
-#    if: github.event_name != 'pull_request'
-#    needs: [ build ]
-#    runs-on: ubuntu-latest
-#    permissions:
-#      contents: write
-#    steps:
+
+  # Prepare a draft release for GitHub Releases page for the manual verification
+  # If accepted and published, release workflow would be triggered
+  releaseDraft:
+    name: Release draft
+    if: github.event_name != 'pull_request'
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - run: 'echo "${{ needs.build.outputs.version }}"'
+
 #      # Check out the current repository
 #      - name: Fetch Sources
 #        uses: actions/checkout@v4
