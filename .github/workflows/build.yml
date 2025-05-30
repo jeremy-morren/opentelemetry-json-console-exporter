@@ -63,8 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      VERSION: v${{ needs.build.outputs.version }}
     steps:
       # Check out the current repository
       - name: Fetch Sources
@@ -89,6 +87,7 @@ jobs:
       - name: Create Release Draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: v${{ needs.build.outputs.version }}
         run: >- 
           gh release create "$VERSION" --draft --title "$VERSION" --notes "Release $VERSION" &&
           gh release upload "$VERSION" packages/*

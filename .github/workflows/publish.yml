@@ -1,0 +1,8 @@
+﻿# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+# GitHub Actions Workflow created for handling the release process based on the draft release prepared with the Build workflow.
+
+name: Publish
+on:
+  release:
+    types: [prereleased, released]
