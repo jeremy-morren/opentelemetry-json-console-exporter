@@ -6,3 +6,23 @@ name: Publish
 on:
   release:
     types: [prereleased, released]
+
+jobs:
+  # Publish the packages to NuGet
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      # Download the artifacts from the release and publish them to NuGet
+      - name: Download Artifacts
+        run: gh release download "${{ github.event.release.tag_name }}" --pattern '*nupkg'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to NuGet
+        run: dotnet nuget push "*.nupkg" --source "nuget.org" --api-key "$NUGET_APIKEY"
+        env:
+          NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
