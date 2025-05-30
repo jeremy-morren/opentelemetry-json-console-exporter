@@ -24,40 +24,35 @@ jobs:
     outputs:
       version: ${{ steps.set_version.outputs.version }}
     steps:
-      - id: set_version
-        run: |
-          echo "1.0.1-rc11" > file
-          echo "version=$(cat file)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
 
-#      - uses: actions/checkout@v4
-#
-#      - name: Setup .NET
-#        uses: actions/setup-dotnet@v4
-#
-#      - run: dotnet build --configuration Release -p:PackageVersionOutputFile=${{ runner.temp }}/PackageVersion
-#        name: Build
-#
-#      - run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
-#        name: Test
-#
-#      - name: Upload dotnet test results
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: dotnet-results
-#          path: TestResults
-#        if: ${{ always() }}
-#
-#      - name: Set package version
-#        id: set_version
-#        run: echo "version=$(cat ${{ runner.temp }}/PackageVersion)" >> $GITHUB_ENV
-#
-#      - uses: actions/upload-artifact@v4
-#        name: Upload NuGet package
-#        with:
-#          name: nuget
-#          if-no-files-found: error
-#          retention-days: 7
-#          path: ${{ env.NuGetDirectory }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      - run: dotnet build --configuration Release -p:PackageVersionOutputFile=${{ runner.temp }}/PackageVersion
+        name: Build
+
+      - run: dotnet test --no-build --configuration Release --logger trx --results-directory TestResults
+        name: Test
+
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-results
+          path: TestResults
+        if: ${{ always() }}
+
+      - name: Set package version
+        id: set_version
+        run: echo "version=$(cat ${{ runner.temp }}/PackageVersion)" >> $GITHUB_OUTPUT
+
+      - uses: actions/upload-artifact@v4
+        name: Upload NuGet package
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{ env.NuGetDirectory }}
 
   # Prepare a draft release for GitHub Releases page for the manual verification
   # If accepted and published, release workflow would be triggered
@@ -68,33 +63,34 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      VERSION: v${{ needs.build.outputs.version }}
     steps:
       - run: 'echo "${{ needs.build.outputs.version }}"'
 
-#      # Check out the current repository
-#      - name: Fetch Sources
-#        uses: actions/checkout@v4
-#
-#      - uses: actions/download-artifact@v4
-#        name: Download NuGet package
-#        with:
-#          name: nuget
-#          path: packages
-#
-#      # Remove old release drafts by using the curl request for the available releases with a draft flag
-#      - name: Remove Old Release Drafts
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: >-
-#          gh api repos/{owner}/{repo}/releases
-#          --jq '.[] | select(.draft == true) | .id'
-#          | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
-#
-#      # Create a new release draft which is not publicly visible and requires manual acceptance
-#      - name: Create Release Draft
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          VERSION: v${{ needs.build.outputs.version }}
-#        run: >-
-#          gh release create "$VERSION" --draft --title "$VERSION" --notes "Release $VERSION" &&
-#          gh release upload "$VERSION" packages/*
+      # Check out the current repository
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        name: Download NuGet package
+        with:
+          name: nuget
+          path: packages
+
+      # Remove old release drafts by using the curl request for the available releases with a draft flag
+      - name: Remove Old Release Drafts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh api repos/{owner}/{repo}/releases
+          --jq '.[] | select(.draft == true) | .id'
+          | xargs -I '{}' gh api -X DELETE repos/{owner}/{repo}/releases/{}
+
+      # Create a new release draft which is not publicly visible and requires manual acceptance
+      - name: Create Release Draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh release create "$VERSION" --draft --title "$VERSION" --notes "Release $VERSION" &&
+          gh release upload "$VERSION" packages/*
