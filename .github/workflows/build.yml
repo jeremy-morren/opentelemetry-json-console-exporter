@@ -25,7 +25,8 @@ jobs:
       version: ${{ steps.set_version.outputs.version }}
     steps:
       - id: set_version
-        run: echo "version=v1" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "version=1.0.1-rc11" >> "$GITHUB_OUTPUT"
 
 #      - uses: actions/checkout@v4
 #
