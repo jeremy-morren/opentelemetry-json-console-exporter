@@ -41,9 +41,7 @@ jobs:
         if: ${{ always() }}
 
       - name: Set package version
-        run: |
-          echo "version=$(cat ${{ runner.temp }}/PackageVersion)"
-          echo "version=$(cat ${{ runner.temp }}/PackageVersion)" >> $GITHUB_ENV
+        run: echo "version=$(cat ${{ runner.temp }}/PackageVersion)" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v4
         name: Upload NuGet package
@@ -62,8 +60,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      RELEASE_VERSION: v${{ needs.build.outputs.version }}
     steps:
       # Check out the current repository
       - name: Fetch Sources
@@ -88,6 +84,7 @@ jobs:
       - name: Create Release Draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: v${{ needs.build.outputs.version }}
         run: >- 
           gh release create "$RELEASE_VERSION" --draft --title "$RELEASE_VERSION" --notes "Release $PACKAGE_VERSION" &&
           gh release upload "$RELEASE_VERSION" packages/*
