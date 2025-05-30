@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      output1: ${{ steps.set_version.outputs.version }}
+      version: ${{ steps.set_version.outputs.version }}
     steps:
       - id: set_version
         run: echo "version=v1" >> "$GITHUB_OUTPUT"
